@@ -8,6 +8,24 @@ AddEventHandler('vojtik_afk:pleaseDontBlameMe', function()
     TriggerClientEvent('vojtik_afk:butSomeoneIsActuallySellingThis', source, afkPlayers)
 end)
 
+RegisterServerEvent('vojtik_afk:playerAfk')
+AddEventHandler('vojtik_afk:playerAfk', function()
+    local src = source
+    afkPlayers[src] = "AFK"
+    TriggerClientEvent('vojtik_afk:cringe', -1, 'add', {sId = src, text = "AFK"})
+    TriggerClientEvent('vojtik_afk:whyTwoEvents', src, true)
+end)
+
+RegisterServerEvent('vojtik_afk:playerMoved')
+AddEventHandler('vojtik_afk:playerMoved', function()
+    local src = source
+    if afkPlayers[src] then
+        afkPlayers[src] = nil
+        TriggerClientEvent('vojtik_afk:cringe', -1, 'remove', {sId = src})
+        TriggerClientEvent('vojtik_afk:whyTwoEvents', src, false)
+    end
+end)
+
 RegisterCommand('afk', function(src, args)
     local argument = table.concat(args, " ", 1, #args) 
     if argument == '' then
